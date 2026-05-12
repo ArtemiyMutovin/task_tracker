@@ -44,7 +44,7 @@ FactoryBot.define do
       due_date { nil }
       starts_on { Date.today }
       recurrence_type { 'specific_dates' }
-      recurrence_params { { 'dates' => [Date.today.to_s, (Date.today + 7).to_s] } }
+      recurrence_params { { 'dates' => [ Date.today.to_s, (Date.today + 7).to_s ] } }
     end
 
     trait :even_days do

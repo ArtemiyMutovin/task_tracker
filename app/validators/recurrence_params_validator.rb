@@ -6,31 +6,31 @@ class RecurrenceParamsValidator < ActiveModel::Validator
     return unless record.recurring?
 
     case record.recurrence_type
-    when 'daily'          then validate_daily(record)
-    when 'monthly'        then validate_monthly(record)
-    when 'specific_dates' then validate_specific_dates(record)
-    when 'even_odd'       then validate_even_odd(record)
+    when "daily"          then validate_daily(record)
+    when "monthly"        then validate_monthly(record)
+    when "specific_dates" then validate_specific_dates(record)
+    when "even_odd"       then validate_even_odd(record)
     end
   end
 
   private
 
   def validate_daily(record)
-    interval = record.recurrence_params['interval']
+    interval = record.recurrence_params["interval"]
     unless interval.is_a?(Integer) && interval.between?(1, MAX_INTERVAL)
       record.errors.add(:recurrence_params, "must include 'interval' as an integer between 1 and #{MAX_INTERVAL}")
     end
   end
 
   def validate_monthly(record)
-    day = record.recurrence_params['day']
+    day = record.recurrence_params["day"]
     unless day.is_a?(Integer) && day.between?(1, 31)
       record.errors.add(:recurrence_params, "must include 'day' between 1 and 31")
     end
   end
 
   def validate_specific_dates(record)
-    dates = record.recurrence_params['dates']
+    dates = record.recurrence_params["dates"]
 
     unless dates.is_a?(Array) && dates.present? && dates.all? { |d| iso8601_date?(d) }
       record.errors.add(:recurrence_params, "must include non-empty 'dates' array of valid ISO 8601 date strings")
@@ -43,7 +43,7 @@ class RecurrenceParamsValidator < ActiveModel::Validator
   end
 
   def validate_even_odd(record)
-    unless %w[even odd].include?(record.recurrence_params['parity'])
+    unless %w[even odd].include?(record.recurrence_params["parity"])
       record.errors.add(:recurrence_params, "must include 'parity' as 'even' or 'odd'")
     end
   end

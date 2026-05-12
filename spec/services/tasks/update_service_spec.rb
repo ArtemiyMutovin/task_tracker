@@ -70,7 +70,7 @@ RSpec.describe Tasks::UpdateService do
         create(:task_occurrence, task: task, occurrence_date: Date.new(2026, 4, 1), status: 'in_progress')
         described_class.new(task, { due_date: Date.new(2026, 4, 1) }).call
         remaining = task.task_occurrences.pluck(:occurrence_date)
-        expect(remaining).to eq([Date.new(2026, 4, 1)])
+        expect(remaining).to eq([ Date.new(2026, 4, 1) ])
       end
     end
   end

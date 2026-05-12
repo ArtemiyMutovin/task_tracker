@@ -71,11 +71,11 @@ RSpec.describe Task, type: :model do
         end
 
         it 'requires valid ISO 8601 date strings' do
-          expect(build(:task, :specific_dates, recurrence_params: { 'dates' => ['not-a-date'] })).not_to be_valid
+          expect(build(:task, :specific_dates, recurrence_params: { 'dates' => [ 'not-a-date' ] })).not_to be_valid
         end
 
         it 'rejects non-ISO formats like dd-mm-yyyy' do
-          expect(build(:task, :specific_dates, recurrence_params: { 'dates' => ['15-01-2025'] })).not_to be_valid
+          expect(build(:task, :specific_dates, recurrence_params: { 'dates' => [ '15-01-2025' ] })).not_to be_valid
         end
 
         it 'rejects dates arrays exceeding the maximum size' do

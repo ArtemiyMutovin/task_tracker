@@ -7,8 +7,8 @@ module Occurrences
     end
 
     def call
-      return failure(["Date #{@date} does not match this task's schedule"]) unless date_valid?
-      return failure(["cancelled occurrences cannot have a non-cancelled status"]) unless cancelled_status_consistent?
+      return failure([ "Date #{@date} does not match this task's schedule" ]) unless date_valid?
+      return failure([ "cancelled occurrences cannot have a non-cancelled status" ]) unless cancelled_status_consistent?
 
       normalize_params
       occurrence = find_or_upsert_occurrence
@@ -38,12 +38,12 @@ module Occurrences
     def cancelled_status_consistent?
       return true unless cancelled_param == true
       status = @params[:status]
-      status.nil? || status == 'cancelled'
+      status.nil? || status == "cancelled"
     end
 
     def normalize_params
       @params[:cancelled] = cancelled_param unless @params[:cancelled].nil?
-      @params[:status] = 'cancelled' if cancelled_param == true && @params[:status].nil?
+      @params[:status] = "cancelled" if cancelled_param == true && @params[:status].nil?
     end
 
     def find_or_upsert_occurrence
@@ -51,7 +51,7 @@ module Occurrences
       begin
         occurrence = @task.task_occurrences.find_or_initialize_by(occurrence_date: @date)
         occurrence.assign_attributes(@params)
-        occurrence.status ||= 'pending'
+        occurrence.status ||= "pending"
         occurrence.save!
         occurrence
       rescue ActiveRecord::RecordNotUnique

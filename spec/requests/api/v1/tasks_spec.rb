@@ -144,7 +144,7 @@ RSpec.describe 'api/v1/tasks', type: :request do
       parameter name: :body, in: :body, schema: {
         type: :object,
         properties: { tag_id: { type: :integer } },
-        required: ['tag_id']
+        required: [ 'tag_id' ]
       }
 
       response '200', 'Tag added' do

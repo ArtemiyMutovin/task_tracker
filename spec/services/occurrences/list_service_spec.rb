@@ -90,11 +90,11 @@ RSpec.describe Occurrences::ListService do
 
     context 'with tag filter' do
       let!(:tag)          { create(:tag) }
-      let!(:tagged_task)  { create(:task, due_date: Date.new(2024, 1, 3), tags: [tag]) }
-      let!(:untagged_task){ create(:task, due_date: Date.new(2024, 1, 4)) }
+      let!(:tagged_task)  { create(:task, due_date: Date.new(2024, 1, 3), tags: [ tag ]) }
+      let!(:untagged_task) { create(:task, due_date: Date.new(2024, 1, 4)) }
 
       it 'filters by tag_ids' do
-        result = described_class.new(date_from: date_from, date_to: date_to, tag_ids: [tag.id]).call
+        result = described_class.new(date_from: date_from, date_to: date_to, tag_ids: [ tag.id ]).call
         task_ids = result.map(&:task_id)
         expect(task_ids).to include(tagged_task.id)
         expect(task_ids).not_to include(untagged_task.id)
@@ -102,10 +102,10 @@ RSpec.describe Occurrences::ListService do
 
       it 'handles comma-separated tag_ids string' do
         tag2 = create(:tag)
-        task2 = create(:task, due_date: Date.new(2024, 1, 5), tags: [tag2])
+        task2 = create(:task, due_date: Date.new(2024, 1, 5), tags: [ tag2 ])
         result = described_class.new(
           date_from: date_from, date_to: date_to,
-          tag_ids: ["#{tag.id},#{tag2.id}"]
+          tag_ids: [ "#{tag.id},#{tag2.id}" ]
         ).call
         task_ids = result.map(&:task_id)
         expect(task_ids).to include(tagged_task.id, task2.id)

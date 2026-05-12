@@ -16,7 +16,7 @@ RSpec.describe Recurrence::DailyGenerator do
 
       it 'returns all days in range' do
         dates = generator.dates_in_range(base_date, base_date + 3)
-        expect(dates).to eq([base_date, base_date + 1, base_date + 2, base_date + 3])
+        expect(dates).to eq([ base_date, base_date + 1, base_date + 2, base_date + 3 ])
       end
 
       it 'excludes dates before starts_on' do
@@ -31,13 +31,13 @@ RSpec.describe Recurrence::DailyGenerator do
 
       it 'returns every other day' do
         dates = generator.dates_in_range(base_date, base_date + 6)
-        expect(dates).to eq([base_date, base_date + 2, base_date + 4, base_date + 6])
+        expect(dates).to eq([ base_date, base_date + 2, base_date + 4, base_date + 6 ])
       end
 
       it 'aligns correctly when range starts mid-cycle' do
         # starts_on: Jan 1, query from Jan 4 → next aligned date is Jan 5
         dates = generator.dates_in_range(base_date + 3, base_date + 7)
-        expect(dates).to eq([base_date + 4, base_date + 6])
+        expect(dates).to eq([ base_date + 4, base_date + 6 ])
       end
     end
 
@@ -46,7 +46,7 @@ RSpec.describe Recurrence::DailyGenerator do
 
       it 'stops at ends_on' do
         dates = generator.dates_in_range(base_date, base_date + 10)
-        expect(dates).to eq([base_date, base_date + 1, base_date + 2])
+        expect(dates).to eq([ base_date, base_date + 1, base_date + 2 ])
       end
     end
 
@@ -64,7 +64,7 @@ RSpec.describe Recurrence::DailyGenerator do
 
       it 'returns only the first aligned date when range is narrower than interval' do
         dates = generator.dates_in_range(base_date, base_date + 5)
-        expect(dates).to eq([base_date])
+        expect(dates).to eq([ base_date ])
       end
 
       it 'returns empty array when range starts after the only aligned date within' do

@@ -11,17 +11,17 @@ module Api
           tasks = tasks.with_due_date_in(date_from, date_to)
         end
 
-        page     = [params.fetch(:page, 1).to_i, 1].max
-        per_page = [[params.fetch(:per_page, Pagy::OPTIONS[:limit]).to_i, 1].max,
-                    Pagy::OPTIONS[:max_limit]].min
+        page     = [ params.fetch(:page, 1).to_i, 1 ].max
+        per_page = [ [ params.fetch(:per_page, Pagy::OPTIONS[:limit]).to_i, 1 ].max,
+                    Pagy::OPTIONS[:max_limit] ].min
 
         pagy  = Pagy::Offset.new(count: tasks.count, page: page, limit: per_page)
         tasks = pagy.records(tasks)
 
-        response.set_header('X-Total-Count', pagy.count.to_s)
-        response.set_header('X-Total-Pages', pagy.last.to_s)
-        response.set_header('X-Page', pagy.page.to_s)
-        response.set_header('X-Per-Page', pagy.limit.to_s)
+        response.set_header("X-Total-Count", pagy.count.to_s)
+        response.set_header("X-Total-Pages", pagy.last.to_s)
+        response.set_header("X-Page", pagy.page.to_s)
+        response.set_header("X-Per-Page", pagy.limit.to_s)
 
         render json: TaskBlueprint.render(tasks, view: :with_tags)
       rescue Date::Error
@@ -76,10 +76,10 @@ module Api
         rp = params[:task][:recurrence_params]
         rt = params.dig(:task, :recurrence_type) || @task&.recurrence_type
         case rt
-        when 'daily'          then rp.permit(:interval).to_h
-        when 'monthly'        then rp.permit(:day).to_h
-        when 'even_odd'       then rp.permit(:parity).to_h
-        when 'specific_dates' then rp.permit(dates: []).to_h
+        when "daily"          then rp.permit(:interval).to_h
+        when "monthly"        then rp.permit(:day).to_h
+        when "even_odd"       then rp.permit(:parity).to_h
+        when "specific_dates" then rp.permit(dates: []).to_h
         else                       {}
         end
       end

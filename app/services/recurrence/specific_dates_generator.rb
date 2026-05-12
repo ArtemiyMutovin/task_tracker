@@ -4,7 +4,7 @@ module Recurrence
       start, finish = effective_range(date_from, date_to)
       return [] if start > finish
 
-      @task.recurrence_params['dates']
+      @task.recurrence_params["dates"]
         .map { |d| Date.iso8601(d) }
         .uniq
         .select { |d| d >= start && d <= finish }

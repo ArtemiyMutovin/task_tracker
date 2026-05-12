@@ -4,7 +4,7 @@ module Occurrences
       @date_from = date_from
       @date_to = date_to
       @status = status
-      @tag_ids = Array.wrap(tag_ids).flat_map { |v| v.to_s.split(',') }.map(&:to_i).reject(&:zero?)
+      @tag_ids = Array.wrap(tag_ids).flat_map { |v| v.to_s.split(",") }.map(&:to_i).reject(&:zero?)
       @include_cancelled = include_cancelled
     end
 
@@ -66,7 +66,7 @@ module Occurrences
     def expand_one_time(task)
       return [] unless task.due_date&.between?(@date_from, @date_to)
       override = task.task_occurrences.find { |o| o.occurrence_date == task.due_date }
-      [OccurrencePresenter.new(task: task, occurrence_date: task.due_date, occurrence: override)]
+      [ OccurrencePresenter.new(task: task, occurrence_date: task.due_date, occurrence: override) ]
     end
 
     def filter_cancelled(occurrences)

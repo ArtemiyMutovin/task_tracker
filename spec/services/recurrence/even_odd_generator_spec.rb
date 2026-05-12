@@ -16,7 +16,7 @@ RSpec.describe Recurrence::EvenOddGenerator do
       it 'returns only even calendar days' do
         dates = generator.dates_in_range(Date.new(2024, 1, 1), Date.new(2024, 1, 6))
         expect(dates.map(&:day)).to all(be_even)
-        expect(dates.map(&:day)).to eq([2, 4, 6])
+        expect(dates.map(&:day)).to eq([ 2, 4, 6 ])
       end
     end
 
@@ -27,7 +27,7 @@ RSpec.describe Recurrence::EvenOddGenerator do
       it 'returns only odd calendar days' do
         dates = generator.dates_in_range(Date.new(2024, 1, 1), Date.new(2024, 1, 6))
         expect(dates.map(&:day)).to all(be_odd)
-        expect(dates.map(&:day)).to eq([1, 3, 5])
+        expect(dates.map(&:day)).to eq([ 1, 3, 5 ])
       end
     end
 
@@ -53,7 +53,7 @@ RSpec.describe Recurrence::EvenOddGenerator do
       it 'does not return dates after ends_on' do
         dates = generator.dates_in_range(Date.new(2024, 1, 1), Date.new(2024, 1, 31))
         expect(dates.max).to be <= Date.new(2024, 1, 8)
-        expect(dates.map(&:day)).to eq([2, 4, 6, 8])
+        expect(dates.map(&:day)).to eq([ 2, 4, 6, 8 ])
       end
     end
   end

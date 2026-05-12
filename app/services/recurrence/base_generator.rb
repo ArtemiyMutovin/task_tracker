@@ -11,9 +11,9 @@ module Recurrence
     private
 
     def effective_range(date_from, date_to)
-      start = [@task.starts_on, date_from].max
-      finish = @task.ends_on ? [@task.ends_on, date_to].min : date_to
-      [start, finish]
+      start = [ @task.starts_on, date_from ].max
+      finish = @task.ends_on ? [ @task.ends_on, date_to ].min : date_to
+      [ start, finish ]
     end
   end
 end

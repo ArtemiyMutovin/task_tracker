@@ -19,7 +19,7 @@ RSpec.describe 'api/v1/tags', type: :request do
       produces 'application/json'
       parameter name: :body, in: :body, schema: {
         type: :object,
-        properties: { tag: { type: :object, properties: { name: { type: :string } }, required: ['name'] } }
+        properties: { tag: { type: :object, properties: { name: { type: :string } }, required: [ 'name' ] } }
       }
 
       response '201', 'Tag created' do

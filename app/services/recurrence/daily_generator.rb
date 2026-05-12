@@ -4,7 +4,7 @@ module Recurrence
       start, finish = effective_range(date_from, date_to)
       return [] if start > finish
 
-      interval = @task.recurrence_params['interval']
+      interval = @task.recurrence_params["interval"]
       first = aligned_start(start, interval)
       return [] if first > finish
 

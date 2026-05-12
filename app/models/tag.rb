@@ -7,7 +7,7 @@ class Tag < ApplicationRecord
   before_validation { self.name = name&.strip&.downcase }
 
   validates :name, presence: true, uniqueness: { case_sensitive: false }
-  validates :system, inclusion: { in: [true, false] }
+  validates :system, inclusion: { in: [ true, false ] }
 
   before_update :protect_system_tag
   before_destroy :protect_system_tag

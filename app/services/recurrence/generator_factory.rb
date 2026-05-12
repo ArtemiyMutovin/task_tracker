@@ -1,10 +1,10 @@
 module Recurrence
   class GeneratorFactory
     GENERATORS = {
-      'daily' => DailyGenerator,
-      'monthly' => MonthlyGenerator,
-      'specific_dates' => SpecificDatesGenerator,
-      'even_odd' => EvenOddGenerator
+      "daily" => DailyGenerator,
+      "monthly" => MonthlyGenerator,
+      "specific_dates" => SpecificDatesGenerator,
+      "even_odd" => EvenOddGenerator
     }.freeze
 
     def self.build(task)

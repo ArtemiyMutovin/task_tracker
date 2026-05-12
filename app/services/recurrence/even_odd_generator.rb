@@ -4,7 +4,7 @@ module Recurrence
       start, finish = effective_range(date_from, date_to)
       return [] if start > finish
 
-      parity = @task.recurrence_params['parity']
+      parity = @task.recurrence_params["parity"]
       dates = []
       current = start
 
@@ -19,7 +19,7 @@ module Recurrence
     private
 
     def matches_parity?(day, parity)
-      parity == 'even' ? day.even? : day.odd?
+      parity == "even" ? day.even? : day.odd?
     end
   end
 end

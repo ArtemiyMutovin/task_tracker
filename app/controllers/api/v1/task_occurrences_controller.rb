@@ -68,7 +68,7 @@ module Api
       end
 
       def include_cancelled?
-        params.fetch(:include_cancelled, 'false').to_s != 'false'
+        params.fetch(:include_cancelled, "false").to_s != "false"
       end
     end
   end

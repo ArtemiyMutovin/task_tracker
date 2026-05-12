@@ -16,7 +16,7 @@ class OccurrencePresenter
   end
 
   def status
-    occurrence&.status || (task.recurring? ? 'pending' : task.status)
+    occurrence&.status || (task.recurring? ? "pending" : task.status)
   end
 
   # nil on the override means "no override" → fall back to the template.

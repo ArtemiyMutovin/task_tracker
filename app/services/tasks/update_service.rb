@@ -40,9 +40,9 @@ module Tasks
     # When recurrence_type changes, clear old recurrence_params so stale keys don't persist.
     # @task.update(@params) will then apply the new recurrence_params (if provided), or leave {}.
     def clear_stale_recurrence_params
-      return unless @params.key?(:recurrence_type) || @params.key?('recurrence_type')
+      return unless @params.key?(:recurrence_type) || @params.key?("recurrence_type")
 
-      new_type = @params[:recurrence_type] || @params['recurrence_type']
+      new_type = @params[:recurrence_type] || @params["recurrence_type"]
       return if new_type.to_s == @task.recurrence_type.to_s
 
       @task.recurrence_params = {}
