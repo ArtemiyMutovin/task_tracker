@@ -1,0 +1,50 @@
+  [1m[35m (189.0ms)[0m  [1m[35mCREATE DATABASE "task_tracker_development" ENCODING = 'unicode'[0m
+  [1m[35m (303.2ms)[0m  [1m[35mCREATE DATABASE "task_tracker_development" ENCODING = 'unicode'[0m
+  [1m[35m (171.6ms)[0m  [1m[35mCREATE DATABASE "task_tracker_test" ENCODING = 'unicode'[0m
+  [1m[35m (15.1ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[35m (10.9ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (0.2ms)[0m  [1m[34mSELECT pg_try_advisory_lock(5708495977441435920)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.7ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (1.6ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Create (2.7ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2026-05-12 11:27:18.939805', '2026-05-12 11:27:18.939809') RETURNING "key"[0m
+Migrating to CreateTags (20260512110354)
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (10.4ms)[0m  [1m[35mCREATE TABLE "tags" ("id" bigserial primary key, "name" character varying NOT NULL, "system" boolean DEFAULT FALSE NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (3.9ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_tags_on_name" ON "tags" ("name")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260512110354') RETURNING "version"[0m
+  [1m[36mTRANSACTION (1.7ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateTasks (20260512110356)
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (8.9ms)[0m  [1m[35mCREATE TABLE "tasks" ("id" bigserial primary key, "title" character varying NOT NULL, "description" text, "status" character varying DEFAULT 'pending' NOT NULL, "due_date" date, "starts_on" date, "ends_on" date, "recurrence_type" character varying, "recurrence_params" jsonb DEFAULT '{}' NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (3.6ms)[0m  [1m[35mCREATE INDEX "index_tasks_on_status" ON "tasks" ("status")[0m
+  [1m[35m (3.8ms)[0m  [1m[35mCREATE INDEX "index_tasks_on_due_date" ON "tasks" ("due_date")[0m
+  [1m[35m (4.1ms)[0m  [1m[35mCREATE INDEX "index_tasks_on_recurrence_type" ON "tasks" ("recurrence_type")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260512110356') RETURNING "version"[0m
+  [1m[36mTRANSACTION (1.9ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateTaskTags (20260512110358)
+  [1m[36mTRANSACTION (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (7.1ms)[0m  [1m[35mCREATE TABLE "task_tags" ("id" bigserial primary key, "task_id" bigint NOT NULL, "tag_id" bigint NOT NULL, CONSTRAINT "fk_rails_2a907ecb20"
+FOREIGN KEY ("task_id")
+  REFERENCES "tasks" ("id")
+, CONSTRAINT "fk_rails_f7e1d90bfc"
+FOREIGN KEY ("tag_id")
+  REFERENCES "tags" ("id")
+)[0m
+  [1m[35m (3.8ms)[0m  [1m[35mCREATE INDEX "index_task_tags_on_task_id" ON "task_tags" ("task_id")[0m
+  [1m[35m (4.1ms)[0m  [1m[35mCREATE INDEX "index_task_tags_on_tag_id" ON "task_tags" ("tag_id")[0m
+  [1m[35m (3.9ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_task_tags_on_task_id_and_tag_id" ON "task_tags" ("task_id", "tag_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260512110358') RETURNING "version"[0m
+  [1m[36mTRANSACTION (2.2ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateTaskOccurrences (20260512110359)
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (9.0ms)[0m  [1m[35mCREATE TABLE "task_occurrences" ("id" bigserial primary key, "task_id" bigint NOT NULL, "occurrence_date" date NOT NULL, "status" character varying DEFAULT 'pending' NOT NULL, "title" character varying, "description" text, "cancelled" boolean DEFAULT FALSE NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_d0f407eed0"
+FOREIGN KEY ("task_id")
+  REFERENCES "tasks" ("id")
+)[0m
+  [1m[35m (6.0ms)[0m  [1m[35mCREATE INDEX "index_task_occurrences_on_task_id" ON "task_occurrences" ("task_id")[0m
+  [1m[35m (5.6ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_task_occurrences_on_task_id_and_occurrence_date" ON "task_occurrences" ("task_id", "occurrence_date")[0m
+  [1m[35m (4.1ms)[0m  [1m[35mCREATE INDEX "index_task_occurrences_on_status" ON "task_occurrences" ("status")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260512110359') RETURNING "version"[0m
+  [1m[36mTRANSACTION (2.0ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.4ms)[0m  [1m[34mSELECT pg_advisory_unlock(5708495977441435920)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m

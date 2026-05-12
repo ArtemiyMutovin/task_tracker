@@ -1,0 +1,542 @@
+---
+openapi: 3.0.1
+info:
+  title: Task Tracker API
+  version: v1
+  description: API for medical personnel task tracker
+paths:
+  "/api/v1/occurrences":
+    get:
+      summary: List occurrences for a date range
+      tags:
+      - Occurrences
+      parameters:
+      - name: date_from
+        in: query
+        format: date
+        required: true
+        schema:
+          type: string
+      - name: date_to
+        in: query
+        format: date
+        required: true
+        schema:
+          type: string
+      - name: status
+        in: query
+        required: false
+        enum:
+        - pending
+        - in_progress
+        - done
+        - cancelled
+        schema:
+          type: string
+        description: ":\n * `pending` \n * `in_progress` \n * `done` \n * `cancelled`
+          \n "
+      - name: tag_ids
+        in: query
+        items:
+          type: integer
+        required: false
+        description: Filter by tag IDs
+        schema:
+          type: array
+      responses:
+        '200':
+          description: List of occurrences (expands recurring tasks)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Occurrence"
+        '400':
+          description: Missing date_from or date_to
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+  "/api/v1/tasks/{task_id}/occurrences/{date}":
+    parameters:
+    - name: task_id
+      in: path
+      required: true
+      schema:
+        type: integer
+    - name: date
+      in: path
+      format: date
+      description: The specific occurrence date (YYYY-MM-DD)
+      required: true
+      schema:
+        type: string
+    patch:
+      summary: Update a specific occurrence
+      tags:
+      - Occurrences
+      parameters: []
+      responses:
+        '200':
+          description: Occurrence updated
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Occurrence"
+        '422':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Errors"
+        '404':
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                occurrence:
+                  type: object
+                  properties:
+                    status:
+                      type: string
+                      enum:
+                      - pending
+                      - in_progress
+                      - done
+                      - cancelled
+                    title:
+                      type: string
+                    description:
+                      type: string
+                    cancelled:
+                      type: boolean
+  "/api/v1/tags":
+    get:
+      summary: List all tags
+      tags:
+      - Tags
+      responses:
+        '200':
+          description: List of tags
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Tag"
+    post:
+      summary: Create a tag
+      tags:
+      - Tags
+      parameters: []
+      responses:
+        '201':
+          description: Tag created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Tag"
+        '422':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Errors"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tag:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                  required:
+                  - name
+  "/api/v1/tags/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Get a tag
+      tags:
+      - Tags
+      responses:
+        '200':
+          description: Tag found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Tag"
+        '404':
+          description: Tag not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+    delete:
+      summary: Delete a tag
+      tags:
+      - Tags
+      responses:
+        '204':
+          description: Tag deleted
+        '403':
+          description: System tag cannot be deleted
+        '404':
+          description: Tag not found
+  "/api/v1/tasks":
+    get:
+      summary: List tasks
+      tags:
+      - Tasks
+      parameters:
+      - name: date_from
+        in: query
+        format: date
+        required: false
+        description: Filter by date range start (YYYY-MM-DD). For one-time tasks only.
+        schema:
+          type: string
+      - name: date_to
+        in: query
+        format: date
+        required: false
+        description: Filter by date range end (YYYY-MM-DD). For one-time tasks only.
+        schema:
+          type: string
+      - name: status
+        in: query
+        required: false
+        enum:
+        - pending
+        - in_progress
+        - done
+        - cancelled
+        description: "Filter by status:\n * `pending` \n * `in_progress` \n * `done`
+          \n * `cancelled` \n "
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Tasks filtered by date range
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Task"
+    post:
+      summary: Create a task
+      tags:
+      - Tasks
+      parameters: []
+      responses:
+        '201':
+          description: Task created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Task"
+        '422':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Errors"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                task:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    description:
+                      type: string
+                    status:
+                      type: string
+                      enum:
+                      - pending
+                      - in_progress
+                      - done
+                      - cancelled
+                    due_date:
+                      type: string
+                      format: date
+                  required:
+                  - title
+                  - due_date
+  "/api/v1/tasks/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: Get a task
+      tags:
+      - Tasks
+      responses:
+        '200':
+          description: Task found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Task"
+        '404':
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+    patch:
+      summary: Update a task
+      tags:
+      - Tasks
+      parameters: []
+      responses:
+        '200':
+          description: Task updated
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Task"
+        '422':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Errors"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                task:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                    description:
+                      type: string
+                    status:
+                      type: string
+                      enum:
+                      - pending
+                      - in_progress
+                      - done
+                      - cancelled
+                    due_date:
+                      type: string
+                      format: date
+    delete:
+      summary: Delete a task
+      tags:
+      - Tasks
+      responses:
+        '204':
+          description: Task deleted
+        '404':
+          description: Task not found
+  "/api/v1/tasks/{task_id}/tags":
+    parameters:
+    - name: task_id
+      in: path
+      required: true
+      schema:
+        type: integer
+    post:
+      summary: Add tag to task
+      tags:
+      - Task Tags
+      parameters: []
+      responses:
+        '200':
+          description: Tag added
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Task"
+        '404':
+          description: Task or tag not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tag_id:
+                  type: integer
+              required:
+              - tag_id
+  "/api/v1/tasks/{task_id}/tags/{id}":
+    parameters:
+    - name: task_id
+      in: path
+      required: true
+      schema:
+        type: integer
+    - name: id
+      in: path
+      description: Tag ID
+      required: true
+      schema:
+        type: integer
+    delete:
+      summary: Remove tag from task
+      tags:
+      - Task Tags
+      responses:
+        '204':
+          description: Tag removed
+        '404':
+          description: Tag not associated with task
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+    Errors:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: string
+    Tag:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        system:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - name
+      - system
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum:
+          - pending
+          - in_progress
+          - done
+          - cancelled
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        starts_on:
+          type: string
+          format: date
+          nullable: true
+        ends_on:
+          type: string
+          format: date
+          nullable: true
+        recurrence_type:
+          type: string
+          enum:
+          - daily
+          - monthly
+          - specific_dates
+          - even_odd
+          nullable: true
+        recurrence_params:
+          type: object
+        tags:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Tag"
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - id
+      - title
+      - status
+    Occurrence:
+      type: object
+      properties:
+        id:
+          type: integer
+          nullable: true
+        task_id:
+          type: integer
+        occurrence_date:
+          type: string
+          format: date
+        status:
+          type: string
+          enum:
+          - pending
+          - in_progress
+          - done
+          - cancelled
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        cancelled:
+          type: boolean
+        recurrence_type:
+          type: string
+          nullable: true
+        tags:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Tag"
+      required:
+      - task_id
+      - occurrence_date
+      - status
+      - title
+      - cancelled
+servers:
+- url: http://localhost:3000
