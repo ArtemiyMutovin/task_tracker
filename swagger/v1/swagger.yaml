@@ -43,6 +43,12 @@ paths:
         description: Filter by tag IDs
         schema:
           type: array
+      - name: include_cancelled
+        in: query
+        required: false
+        description: 'Include cancelled occurrences (default: false)'
+        schema:
+          type: boolean
       responses:
         '200':
           description: List of occurrences (expands recurring tasks)
@@ -53,7 +59,7 @@ paths:
                 items:
                   "$ref": "#/components/schemas/Occurrence"
         '400':
-          description: Missing date_from or date_to
+          description: Invalid date format
           content:
             application/json:
               schema:
@@ -118,6 +124,15 @@ paths:
                       type: string
                     cancelled:
                       type: boolean
+    delete:
+      summary: Reset a specific occurrence to template defaults
+      tags:
+      - Occurrences
+      responses:
+        '204':
+          description: Occurrence reset
+        '404':
+          description: Task not found
   "/api/v1/tags":
     get:
       summary: List all tags

@@ -5,7 +5,8 @@ module Recurrence
       return [] if start > finish
 
       @task.recurrence_params['dates']
-        .map { |d| Date.parse(d) }
+        .map { |d| Date.iso8601(d) }
+        .uniq
         .select { |d| d >= start && d <= finish }
         .sort
     end

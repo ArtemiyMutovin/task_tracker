@@ -19,12 +19,14 @@ class OccurrencePresenter
     occurrence&.status || (task.recurring? ? 'pending' : task.status)
   end
 
+  # nil on the override means "no override" → fall back to the template.
+  # An explicit empty string is treated as an intentional clear.
   def title
-    occurrence&.title || task.title
+    occurrence&.title.nil? ? task.title : occurrence.title
   end
 
   def description
-    occurrence&.description || task.description
+    occurrence&.description.nil? ? task.description : occurrence.description
   end
 
   def cancelled
@@ -37,5 +39,9 @@ class OccurrencePresenter
 
   def recurrence_type
     task.recurrence_type
+  end
+
+  def recurrence_params
+    task.recurrence_params
   end
 end

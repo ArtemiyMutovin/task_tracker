@@ -8,7 +8,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :tasks, only: %i[index show create update destroy] do
         resources :task_tags, only: %i[create destroy], path: 'tags'
-        resources :task_occurrences, only: [:update], path: 'occurrences', param: :date
+        resources :task_occurrences, only: %i[update destroy], path: 'occurrences', param: :date
       end
 
       resources :occurrences, only: [:index], controller: 'task_occurrences'

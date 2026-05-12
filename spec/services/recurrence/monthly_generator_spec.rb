@@ -43,5 +43,25 @@ RSpec.describe Recurrence::MonthlyGenerator do
         expect(dates).to eq([Date.new(2024, 1, 1), Date.new(2024, 2, 1)])
       end
     end
+
+    context 'on the 31st in a non-leap year February' do
+      let(:task) { task_with(starts_on: Date.new(2023, 1, 1), day: 31) }
+      let(:generator) { described_class.new(task) }
+
+      it 'clamps to Feb 28 in a non-leap year' do
+        dates = generator.dates_in_range(Date.new(2023, 2, 1), Date.new(2023, 2, 28))
+        expect(dates).to eq([Date.new(2023, 2, 28)])
+      end
+    end
+
+    context 'on the 31st in a leap year February' do
+      let(:task) { task_with(starts_on: Date.new(2024, 1, 1), day: 31) }
+      let(:generator) { described_class.new(task) }
+
+      it 'clamps to Feb 29 in a leap year' do
+        dates = generator.dates_in_range(Date.new(2024, 2, 1), Date.new(2024, 2, 29))
+        expect(dates).to eq([Date.new(2024, 2, 29)])
+      end
+    end
   end
 end

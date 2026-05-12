@@ -48,3 +48,220 @@ FOREIGN KEY ("task_id")
   [1m[36mTRANSACTION (2.0ms)[0m  [1m[35mCOMMIT[0m
   [1m[35m (0.4ms)[0m  [1m[34mSELECT pg_advisory_unlock(5708495977441435920)[0m
   [1m[36mActiveRecord::SchemaMigration Load (0.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.7ms)[0m  [1m[34mSELECT pg_try_advisory_lock(5708495977441435920)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (3.1ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+Migrating to AddLowercaseIndexToTags (20260512120001)
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (9.8ms)[0m  [1m[35mDROP INDEX  "index_tags_on_name"[0m
+  [1m[35m (10.9ms)[0m  [1m[35mCREATE UNIQUE INDEX index_tags_on_lower_name ON tags (LOWER(name))[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.8ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260512120001') RETURNING "version"[0m
+  [1m[36mTRANSACTION (9.0ms)[0m  [1m[35mCOMMIT[0m
+Migrating to SeedSystemTags (20260512120002)
+  [1m[36mTRANSACTION (0.3ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (5.8ms)[0m  [1m[32mINSERT INTO tags (name, system, created_at, updated_at)
+SELECT 'отчетность', true, NOW(), NOW()
+WHERE NOT EXISTS (SELECT 1 FROM tags WHERE LOWER(name) = 'отчетность')
+[0m
+  [1m[35m (0.5ms)[0m  [1m[32mINSERT INTO tags (name, system, created_at, updated_at)
+SELECT 'операции', true, NOW(), NOW()
+WHERE NOT EXISTS (SELECT 1 FROM tags WHERE LOWER(name) = 'операции')
+[0m
+  [1m[35m (0.3ms)[0m  [1m[32mINSERT INTO tags (name, system, created_at, updated_at)
+SELECT 'звонок', true, NOW(), NOW()
+WHERE NOT EXISTS (SELECT 1 FROM tags WHERE LOWER(name) = 'звонок')
+[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260512120002') RETURNING "version"[0m
+  [1m[36mTRANSACTION (1.8ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.3ms)[0m  [1m[34mSELECT pg_advisory_unlock(5708495977441435920)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Started GET "/api-docs" for 172.19.0.1 at 2026-05-12 13:55:20 +0000
+  [1m[35m (34.1ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+  [1m[35m (15.5ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (2.3ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  
+ActiveRecord::PendingMigrationError (
+
+Migrations are pending. To resolve this issue, run:
+
+        bin/rails db:migrate
+
+You have 6 pending migrations:
+
+db/migrate/20260512110354_create_tags.rb
+db/migrate/20260512110356_create_tasks.rb
+db/migrate/20260512110358_create_task_tags.rb
+db/migrate/20260512110359_create_task_occurrences.rb
+db/migrate/20260512120001_add_lowercase_index_to_tags.rb
+db/migrate/20260512120002_seed_system_tags.rb
+
+
+):
+  
+activerecord (7.2.3.1) lib/active_record/migration.rb:756:in 'ActiveRecord::Migration.check_pending_migrations'
+activerecord (7.2.3.1) lib/active_record/migration.rb:663:in 'block (2 levels) in ActiveRecord::Migration::CheckPending#call'
+activesupport (7.2.3.1) lib/active_support/file_update_checker.rb:85:in 'ActiveSupport::FileUpdateChecker#execute'
+activerecord (7.2.3.1) lib/active_record/migration.rb:668:in 'block in ActiveRecord::Migration::CheckPending#call'
+activerecord (7.2.3.1) lib/active_record/migration.rb:660:in 'Thread::Mutex#synchronize'
+activerecord (7.2.3.1) lib/active_record/migration.rb:660:in 'ActiveRecord::Migration::CheckPending#call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/callbacks.rb:31:in 'block in ActionDispatch::Callbacks#call'
+activesupport (7.2.3.1) lib/active_support/callbacks.rb:101:in 'ActiveSupport::Callbacks#run_callbacks'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/callbacks.rb:30:in 'ActionDispatch::Callbacks#call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/executor.rb:16:in 'ActionDispatch::Executor#call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/actionable_exceptions.rb:18:in 'ActionDispatch::ActionableExceptions#call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/debug_exceptions.rb:31:in 'ActionDispatch::DebugExceptions#call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/show_exceptions.rb:32:in 'ActionDispatch::ShowExceptions#call'
+railties (7.2.3.1) lib/rails/rack/logger.rb:41:in 'Rails::Rack::Logger#call_app'
+railties (7.2.3.1) lib/rails/rack/logger.rb:29:in 'Rails::Rack::Logger#call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/remote_ip.rb:96:in 'ActionDispatch::RemoteIp#call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/request_id.rb:33:in 'ActionDispatch::RequestId#call'
+rack (3.2.6) lib/rack/runtime.rb:24:in 'Rack::Runtime#call'
+activesupport (7.2.3.1) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in 'ActiveSupport::Cache::Strategy::LocalCache::Middleware#call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/server_timing.rb:61:in 'block in ActionDispatch::ServerTiming#call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/server_timing.rb:26:in 'ActionDispatch::ServerTiming::Subscriber#collect_events'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/server_timing.rb:60:in 'ActionDispatch::ServerTiming#call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/executor.rb:16:in 'ActionDispatch::Executor#call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/static.rb:27:in 'ActionDispatch::Static#call'
+rack (3.2.6) lib/rack/sendfile.rb:131:in 'Rack::Sendfile#call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/host_authorization.rb:143:in 'ActionDispatch::HostAuthorization#call'
+rack-cors (3.0.0) lib/rack/cors.rb:102:in 'Rack::Cors#call'
+railties (7.2.3.1) lib/rails/engine.rb:535:in 'Rails::Engine#call'
+puma (8.0.1) lib/puma/configuration.rb:305:in 'Puma::Configuration::ConfigMiddleware#call'
+puma (8.0.1) lib/puma/response.rb:79:in 'block in Puma::Response#handle_request'
+puma (8.0.1) lib/puma/thread_pool.rb:434:in 'Puma::ThreadPool#with_force_shutdown'
+puma (8.0.1) lib/puma/response.rb:78:in 'Puma::Response#handle_request'
+puma (8.0.1) lib/puma/server.rb:508:in 'Puma::Server#process_client'
+puma (8.0.1) lib/puma/server.rb:263:in 'block in Puma::Server#run'
+puma (8.0.1) lib/puma/thread_pool.rb:246:in 'block in Puma::ThreadPool#spawn_thread'
+Started GET "/favicon.ico" for 172.19.0.1 at 2026-05-12 13:55:22 +0000
+  [1m[36mActiveRecord::SchemaMigration Load (0.9ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  
+ActiveRecord::PendingMigrationError (
+
+Migrations are pending. To resolve this issue, run:
+
+        bin/rails db:migrate
+
+You have 6 pending migrations:
+
+db/migrate/20260512110354_create_tags.rb
+db/migrate/20260512110356_create_tasks.rb
+db/migrate/20260512110358_create_task_tags.rb
+db/migrate/20260512110359_create_task_occurrences.rb
+db/migrate/20260512120001_add_lowercase_index_to_tags.rb
+db/migrate/20260512120002_seed_system_tags.rb
+
+
+):
+  
+activerecord (7.2.3.1) lib/active_record/migration.rb:756:in 'ActiveRecord::Migration.check_pending_migrations'
+activerecord (7.2.3.1) lib/active_record/migration.rb:663:in 'block (2 levels) in ActiveRecord::Migration::CheckPending#call'
+activesupport (7.2.3.1) lib/active_support/file_update_checker.rb:85:in 'ActiveSupport::FileUpdateChecker#execute'
+activerecord (7.2.3.1) lib/active_record/migration.rb:668:in 'block in ActiveRecord::Migration::CheckPending#call'
+activerecord (7.2.3.1) lib/active_record/migration.rb:660:in 'Thread::Mutex#synchronize'
+activerecord (7.2.3.1) lib/active_record/migration.rb:660:in 'ActiveRecord::Migration::CheckPending#call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/callbacks.rb:31:in 'block in ActionDispatch::Callbacks#call'
+activesupport (7.2.3.1) lib/active_support/callbacks.rb:101:in 'ActiveSupport::Callbacks#run_callbacks'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/callbacks.rb:30:in 'ActionDispatch::Callbacks#call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/executor.rb:16:in 'ActionDispatch::Executor#call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/actionable_exceptions.rb:18:in 'ActionDispatch::ActionableExceptions#call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/debug_exceptions.rb:31:in 'ActionDispatch::DebugExceptions#call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/show_exceptions.rb:32:in 'ActionDispatch::ShowExceptions#call'
+railties (7.2.3.1) lib/rails/rack/logger.rb:41:in 'Rails::Rack::Logger#call_app'
+railties (7.2.3.1) lib/rails/rack/logger.rb:29:in 'Rails::Rack::Logger#call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/remote_ip.rb:96:in 'ActionDispatch::RemoteIp#call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/request_id.rb:33:in 'ActionDispatch::RequestId#call'
+rack (3.2.6) lib/rack/runtime.rb:24:in 'Rack::Runtime#call'
+activesupport (7.2.3.1) lib/active_support/cache/strategy/local_cache_middleware.rb:29:in 'ActiveSupport::Cache::Strategy::LocalCache::Middleware#call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/server_timing.rb:61:in 'block in ActionDispatch::ServerTiming#call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/server_timing.rb:26:in 'ActionDispatch::ServerTiming::Subscriber#collect_events'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/server_timing.rb:60:in 'ActionDispatch::ServerTiming#call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/executor.rb:16:in 'ActionDispatch::Executor#call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/static.rb:27:in 'ActionDispatch::Static#call'
+rack (3.2.6) lib/rack/sendfile.rb:131:in 'Rack::Sendfile#call'
+actionpack (7.2.3.1) lib/action_dispatch/middleware/host_authorization.rb:143:in 'ActionDispatch::HostAuthorization#call'
+rack-cors (3.0.0) lib/rack/cors.rb:102:in 'Rack::Cors#call'
+railties (7.2.3.1) lib/rails/engine.rb:535:in 'Rails::Engine#call'
+puma (8.0.1) lib/puma/configuration.rb:305:in 'Puma::Configuration::ConfigMiddleware#call'
+puma (8.0.1) lib/puma/response.rb:79:in 'block in Puma::Response#handle_request'
+puma (8.0.1) lib/puma/thread_pool.rb:434:in 'Puma::ThreadPool#with_force_shutdown'
+puma (8.0.1) lib/puma/response.rb:78:in 'Puma::Response#handle_request'
+puma (8.0.1) lib/puma/server.rb:508:in 'Puma::Server#process_client'
+puma (8.0.1) lib/puma/server.rb:263:in 'block in Puma::Server#run'
+puma (8.0.1) lib/puma/thread_pool.rb:246:in 'block in Puma::ThreadPool#spawn_thread'
+Started POST "/rails/actions" for 172.19.0.1 at 2026-05-12 13:55:35 +0000
+  [1m[35m (1.5ms)[0m  [1m[34mSELECT pg_try_advisory_lock(5708495977441435920)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (1.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[36mActiveRecord::InternalMetadata Load (2.8ms)[0m  [1m[34mSELECT * FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 ORDER BY "ar_internal_metadata"."key" ASC LIMIT 1[0m  [[nil, "environment"]]
+  [1m[36mActiveRecord::InternalMetadata Create (3.4ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ('environment', 'development', '2026-05-12 13:55:35.698674', '2026-05-12 13:55:35.698838') RETURNING "key"[0m
+Migrating to CreateTags (20260512110354)
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (14.5ms)[0m  [1m[35mCREATE TABLE "tags" ("id" bigserial primary key, "name" character varying NOT NULL, "system" boolean DEFAULT FALSE NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (5.9ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_tags_on_name" ON "tags" ("name")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.7ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260512110354') RETURNING "version"[0m
+  [1m[36mTRANSACTION (3.9ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateTasks (20260512110356)
+  [1m[36mTRANSACTION (0.5ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (10.9ms)[0m  [1m[35mCREATE TABLE "tasks" ("id" bigserial primary key, "title" character varying NOT NULL, "description" text, "status" character varying DEFAULT 'pending' NOT NULL, "due_date" date, "starts_on" date, "ends_on" date, "recurrence_type" character varying, "recurrence_params" jsonb DEFAULT '{}' NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL)[0m
+  [1m[35m (6.5ms)[0m  [1m[35mCREATE INDEX "index_tasks_on_status" ON "tasks" ("status")[0m
+  [1m[35m (6.0ms)[0m  [1m[35mCREATE INDEX "index_tasks_on_due_date" ON "tasks" ("due_date")[0m
+  [1m[35m (5.1ms)[0m  [1m[35mCREATE INDEX "index_tasks_on_recurrence_type" ON "tasks" ("recurrence_type")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.8ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260512110356') RETURNING "version"[0m
+  [1m[36mTRANSACTION (2.8ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateTaskTags (20260512110358)
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (9.1ms)[0m  [1m[35mCREATE TABLE "task_tags" ("id" bigserial primary key, "task_id" bigint NOT NULL, "tag_id" bigint NOT NULL, CONSTRAINT "fk_rails_2a907ecb20"
+FOREIGN KEY ("task_id")
+  REFERENCES "tasks" ("id")
+, CONSTRAINT "fk_rails_f7e1d90bfc"
+FOREIGN KEY ("tag_id")
+  REFERENCES "tags" ("id")
+)[0m
+  [1m[35m (4.6ms)[0m  [1m[35mCREATE INDEX "index_task_tags_on_task_id" ON "task_tags" ("task_id")[0m
+  [1m[35m (5.9ms)[0m  [1m[35mCREATE INDEX "index_task_tags_on_tag_id" ON "task_tags" ("tag_id")[0m
+  [1m[35m (5.0ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_task_tags_on_task_id_and_tag_id" ON "task_tags" ("task_id", "tag_id")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.8ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260512110358') RETURNING "version"[0m
+  [1m[36mTRANSACTION (2.3ms)[0m  [1m[35mCOMMIT[0m
+Migrating to CreateTaskOccurrences (20260512110359)
+  [1m[36mTRANSACTION (0.4ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (18.9ms)[0m  [1m[35mCREATE TABLE "task_occurrences" ("id" bigserial primary key, "task_id" bigint NOT NULL, "occurrence_date" date NOT NULL, "status" character varying DEFAULT 'pending' NOT NULL, "title" character varying, "description" text, "cancelled" boolean DEFAULT FALSE NOT NULL, "created_at" timestamp(6) NOT NULL, "updated_at" timestamp(6) NOT NULL, CONSTRAINT "fk_rails_d0f407eed0"
+FOREIGN KEY ("task_id")
+  REFERENCES "tasks" ("id")
+)[0m
+  [1m[35m (5.9ms)[0m  [1m[35mCREATE INDEX "index_task_occurrences_on_task_id" ON "task_occurrences" ("task_id")[0m
+  [1m[35m (8.8ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_task_occurrences_on_task_id_and_occurrence_date" ON "task_occurrences" ("task_id", "occurrence_date")[0m
+  [1m[35m (7.4ms)[0m  [1m[35mCREATE INDEX "index_task_occurrences_on_status" ON "task_occurrences" ("status")[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.5ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260512110359') RETURNING "version"[0m
+  [1m[36mTRANSACTION (2.4ms)[0m  [1m[35mCOMMIT[0m
+Migrating to AddLowercaseIndexToTags (20260512120001)
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (2.1ms)[0m  [1m[35mDROP INDEX  "index_tags_on_name"[0m
+  [1m[35m (6.8ms)[0m  [1m[35mCREATE UNIQUE INDEX index_tags_on_lower_name ON tags (LOWER(name))[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.7ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260512120001') RETURNING "version"[0m
+  [1m[36mTRANSACTION (4.1ms)[0m  [1m[35mCOMMIT[0m
+Migrating to SeedSystemTags (20260512120002)
+  [1m[36mTRANSACTION (0.6ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (6.3ms)[0m  [1m[32mINSERT INTO tags (name, system, created_at, updated_at)
+SELECT 'отчетность', true, NOW(), NOW()
+WHERE NOT EXISTS (SELECT 1 FROM tags WHERE LOWER(name) = 'отчетность')
+[0m
+  [1m[35m (2.6ms)[0m  [1m[32mINSERT INTO tags (name, system, created_at, updated_at)
+SELECT 'операции', true, NOW(), NOW()
+WHERE NOT EXISTS (SELECT 1 FROM tags WHERE LOWER(name) = 'операции')
+[0m
+  [1m[35m (1.1ms)[0m  [1m[32mINSERT INTO tags (name, system, created_at, updated_at)
+SELECT 'звонок', true, NOW(), NOW()
+WHERE NOT EXISTS (SELECT 1 FROM tags WHERE LOWER(name) = 'звонок')
+[0m
+  [1m[36mActiveRecord::SchemaMigration Create (0.8ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ('20260512120002') RETURNING "version"[0m
+  [1m[36mTRANSACTION (2.3ms)[0m  [1m[35mCOMMIT[0m
+  [1m[35m (0.5ms)[0m  [1m[34mSELECT pg_advisory_unlock(5708495977441435920)[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.8ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Started GET "/api-docs" for 172.19.0.1 at 2026-05-12 13:55:36 +0000
+  [1m[36mActiveRecord::SchemaMigration Load (1.4ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Started GET "/api-docs/index.html" for 172.19.0.1 at 2026-05-12 13:55:36 +0000
+Started GET "/api-docs/swagger-ui.css" for 172.19.0.1 at 2026-05-12 13:55:36 +0000
+Started GET "/api-docs/swagger-ui-bundle.js" for 172.19.0.1 at 2026-05-12 13:55:36 +0000
+Started GET "/api-docs/swagger-ui-standalone-preset.js" for 172.19.0.1 at 2026-05-12 13:55:36 +0000
+Started GET "/api-docs/v1/swagger.yaml" for 172.19.0.1 at 2026-05-12 13:55:36 +0000
+Started GET "/api-docs/favicon-32x32.png" for 172.19.0.1 at 2026-05-12 13:55:36 +0000

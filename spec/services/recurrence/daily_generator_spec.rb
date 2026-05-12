@@ -58,5 +58,19 @@ RSpec.describe Recurrence::DailyGenerator do
         expect(dates).to be_empty
       end
     end
+
+    context 'when interval exceeds the range width' do
+      let(:task) { task_with(starts_on: base_date, interval: 10) }
+
+      it 'returns only the first aligned date when range is narrower than interval' do
+        dates = generator.dates_in_range(base_date, base_date + 5)
+        expect(dates).to eq([base_date])
+      end
+
+      it 'returns empty array when range starts after the only aligned date within' do
+        dates = generator.dates_in_range(base_date + 3, base_date + 8)
+        expect(dates).to be_empty
+      end
+    end
   end
 end

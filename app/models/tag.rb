@@ -4,6 +4,8 @@ class Tag < ApplicationRecord
   has_many :task_tags, dependent: :destroy
   has_many :tasks, through: :task_tags
 
+  before_validation { self.name = name&.strip&.downcase }
+
   validates :name, presence: true, uniqueness: { case_sensitive: false }
   validates :system, inclusion: { in: [true, false] }
 
@@ -13,8 +15,6 @@ class Tag < ApplicationRecord
   private
 
   def protect_system_tag
-    if system?
-      throw :abort
-    end
+    throw :abort if system?
   end
 end

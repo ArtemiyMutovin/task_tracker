@@ -5,6 +5,7 @@ gem "pg", "~> 1.1"
 gem "puma", ">= 5.0"
 gem "rack-cors"
 gem "blueprinter"
+gem "pagy"
 gem "rswag-api"
 gem "rswag-ui"
 gem "bootsnap", require: false

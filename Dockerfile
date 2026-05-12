@@ -1,11 +1,11 @@
 ARG RUBY_VERSION=3.4.1
-FROM docker.io/library/ruby:$RUBY_VERSION-slim
-
-WORKDIR /app
+FROM docker.io/library/ruby:${RUBY_VERSION}-slim
 
 RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential libpq-dev postgresql-client && \
     rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+WORKDIR /app
 
 ENV BUNDLE_PATH="/usr/local/bundle"
 

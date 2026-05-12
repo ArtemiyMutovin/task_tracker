@@ -12,8 +12,22 @@ RSpec.describe Tag, type: :model do
     it { should validate_uniqueness_of(:name).case_insensitive }
   end
 
+  describe 'name normalization' do
+    it 'downcases and strips the name before validation' do
+      tag = build(:tag, name: '  Тест  ')
+      tag.valid?
+      expect(tag.name).to eq('тест')
+    end
+
+    it 'prevents creation of mixed-case duplicates' do
+      create(:tag, name: 'звонок')
+      duplicate = build(:tag, name: 'ЗВОНОК')
+      expect(duplicate).not_to be_valid
+    end
+  end
+
   describe 'system tag protection' do
-    let!(:system_tag) { create(:tag, :system, name: 'отчетность') }
+    let!(:system_tag)  { create(:tag, :system, name: 'отчетность') }
     let!(:regular_tag) { create(:tag) }
 
     it 'cannot be updated' do
@@ -26,7 +40,7 @@ RSpec.describe Tag, type: :model do
     end
 
     it 'allows updating regular tags' do
-      expect(regular_tag.update(name: 'Updated')).to be(true)
+      expect(regular_tag.update(name: 'updated')).to be(true)
     end
 
     it 'allows destroying regular tags' do

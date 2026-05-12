@@ -3,8 +3,10 @@ module Api
     class TaskTagsController < BaseController
       def create
         tag = Tag.find(tag_id_param)
-        task.tags << tag unless task.tags.include?(tag)
-        render json: TaskBlueprint.render(task, view: :with_tags)
+        TaskTag.find_or_create_by!(task: task, tag: tag)
+        render json: TaskBlueprint.render(task.reload, view: :with_tags)
+      rescue ActiveRecord::RecordNotUnique
+        render json: TaskBlueprint.render(task.reload, view: :with_tags)
       rescue ActiveRecord::RecordInvalid => e
         render json: { errors: e.record.errors.full_messages }, status: :unprocessable_entity
       end

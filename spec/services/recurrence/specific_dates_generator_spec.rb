@@ -35,5 +35,13 @@ RSpec.describe Recurrence::SpecificDatesGenerator do
       dates = described_class.new(task).dates_in_range(Date.new(2024, 1, 1), Date.new(2024, 1, 31))
       expect(dates).to eq([Date.new(2024, 1, 15)])
     end
+
+    it 'deduplicates repeated dates' do
+      task = build(:task, :specific_dates,
+                   starts_on: Date.new(2024, 1, 1),
+                   recurrence_params: { 'dates' => ['2024-01-05', '2024-01-05', '2024-01-15'] })
+      dates = described_class.new(task).dates_in_range(Date.new(2024, 1, 1), Date.new(2024, 1, 31))
+      expect(dates).to eq([Date.new(2024, 1, 5), Date.new(2024, 1, 15)])
+    end
   end
 end

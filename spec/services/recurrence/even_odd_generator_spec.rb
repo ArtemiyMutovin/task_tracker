@@ -40,5 +40,21 @@ RSpec.describe Recurrence::EvenOddGenerator do
         expect(dates.min).to be >= Date.new(2024, 1, 5)
       end
     end
+
+    context 'respects ends_on' do
+      let(:task) do
+        build(:task, :even_days,
+              starts_on: Date.new(2024, 1, 1),
+              ends_on: Date.new(2024, 1, 8),
+              recurrence_params: { 'parity' => 'even' })
+      end
+      let(:generator) { described_class.new(task) }
+
+      it 'does not return dates after ends_on' do
+        dates = generator.dates_in_range(Date.new(2024, 1, 1), Date.new(2024, 1, 31))
+        expect(dates.max).to be <= Date.new(2024, 1, 8)
+        expect(dates.map(&:day)).to eq([2, 4, 6, 8])
+      end
+    end
   end
 end

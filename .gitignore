@@ -1,0 +1,40 @@
+# Bundler
+/.bundle
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Logs
+/log/*
+!/log/.keep
+
+# Temp files
+/tmp/*
+!/tmp/.keep
+
+# Storage
+/storage/*
+!/storage/.keep
+
+# Bootsnap cache
+/tmp/cache/bootsnap*/
+
+# Pidfiles
+/tmp/pids/*.pid
+
+# Swapfiles / editor
+*.swp
+*.swo
+*~
+.DS_Store
+
+# RSpec examples
+/spec/examples.txt
+
+# Test coverage
+/coverage/
+
+.idea
+
